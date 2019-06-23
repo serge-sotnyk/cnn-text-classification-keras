@@ -84,7 +84,8 @@ class TextProcessing:
 
 		return x_train, y_train, x_val, y_val, word_index
 
-	def build_embedding_index_from_word2vec(self, fname, vocab):
+	@staticmethod
+	def build_embedding_index_from_word2vec(fname, vocab):
 		"""
 		Build an index of the word embeddings using google word2vec.
 
@@ -122,7 +123,8 @@ class TextProcessing:
 					f.read(binary_len)
 		return embeddings_index
 
-	def build_embedding_index_from_glove(self, fname, vocab):
+	@staticmethod
+	def build_embedding_index_from_glove(fname, vocab):
 		"""
 		Build an index of the word embeddings using Glove word2vec.
 
@@ -144,7 +146,8 @@ class TextProcessing:
 			embeddings_index[word] = coefs
 		return embeddings_index
 
-	def build_embedding_index_from_fasttex(self, fname, vocab):
+	@staticmethod
+	def build_embedding_index_from_fasttex(fname, vocab):
 		"""
 		Build an index of the word embeddings using facebook fasttext.
 

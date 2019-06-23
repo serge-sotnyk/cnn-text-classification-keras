@@ -38,7 +38,7 @@ x_train, y_train, x_val, y_val, word_index = tp.preprocess()
 embeddings_index = tp.build_embedding_index_from_glove(fname, word_index)
 print('Found %s word vectors.' % len(embeddings_index))
 
-pickle.dump([word_index, embeddings_index], open('tokenization_and_embedding.p', 'wb'))
+# pickle.dump([word_index, embeddings_index], open('tokenization_and_embedding.p', 'wb'))
 
 labels_index = tp.labels_index
 

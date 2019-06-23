@@ -1,21 +1,12 @@
 from __future__ import print_function
 
 import numpy as np
-
-from keras.layers import Dense, Input, Flatten, Reshape, concatenate, Dropout
-from keras.layers import Conv1D, Conv2D, MaxPooling1D, MaxPooling2D, Embedding
-from keras.layers import LSTM, Bidirectional
-from keras.models import Model
 from keras import optimizers
-from keras import regularizers
-
-import sys
-from text_processing_util import TextProcessing
-
-
+from keras.layers import Conv2D, MaxPooling2D, Embedding
+from keras.layers import Dense, Input, Flatten, Reshape, concatenate, Dropout
+from keras.models import Model
 
 __author__ = 'jverma'
-
 
 
 ## sentence CNN by Y.Kim
@@ -53,32 +44,27 @@ def kimCNN(EMBEDDING_DIM, MAX_SEQUENCE_LENGTH, MAX_NB_WORDS, embeddings_index, w
                                 input_length=MAX_SEQUENCE_LENGTH,
                                 trainable=True)
 
-
     print('Training model.')
 
     sequence_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
     embedded_sequences = embedding_layer(sequence_input)
     print(embedded_sequences.shape)
 
-
     # add first conv filter
     embedded_sequences = Reshape((MAX_SEQUENCE_LENGTH, EMBEDDING_DIM, 1))(embedded_sequences)
     x = Conv2D(100, (5, EMBEDDING_DIM), activation='relu')(embedded_sequences)
     x = MaxPooling2D((MAX_SEQUENCE_LENGTH - 5 + 1, 1))(x)
 
-
     # add second conv filter.
     y = Conv2D(100, (4, EMBEDDING_DIM), activation='relu')(embedded_sequences)
     y = MaxPooling2D((MAX_SEQUENCE_LENGTH - 4 + 1, 1))(y)
-
 
     # add third conv filter.
     z = Conv2D(100, (3, EMBEDDING_DIM), activation='relu')(embedded_sequences)
     z = MaxPooling2D((MAX_SEQUENCE_LENGTH - 3 + 1, 1))(z)
 
-
     # concate the conv layers
-    alpha = concatenate([x,y,z])
+    alpha = concatenate([x, y, z])
 
     # flatted the pooled features.
     alpha = Flatten()(alpha)
@@ -92,10 +78,9 @@ def kimCNN(EMBEDDING_DIM, MAX_SEQUENCE_LENGTH, MAX_NB_WORDS, embeddings_index, w
     # build model
     model = Model(sequence_input, preds)
     adadelta = optimizers.Adadelta()
-        
+
     model.compile(loss='categorical_crossentropy',
                   optimizer=adadelta,
                   metrics=['acc'])
-
 
     return model
