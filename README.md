@@ -7,7 +7,7 @@ This is a Keras implementation of Yoon Kim's paper [Convolution Neural Networks 
 ## Requirements:
 - numpy
 - keras
-- cPickle
+- pickle
 
 
 ## Usage:
