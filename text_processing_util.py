@@ -8,8 +8,6 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 
-
-
 __author = 'jverma'
 
 
@@ -17,7 +15,9 @@ class TextProcessing:
 	"""
 	Processing util for working with text data.
 	"""
-	def __init__(self, texts, labels, EMBEDDING_DIM=300, MAX_SEQUENCE_LENGTH=100, MAX_NB_WORDS=20000, VALIDATION_SPLIT=0.0):
+
+	def __init__(self, texts, labels, EMBEDDING_DIM=300, MAX_SEQUENCE_LENGTH=100, MAX_NB_WORDS=20000,
+				 VALIDATION_SPLIT=0.0):
 		"""
 		Instantiates the class.
 
@@ -34,10 +34,9 @@ class TextProcessing:
 		self.EMBEDDING_DIM = EMBEDDING_DIM
 		self.MAX_NB_WORDS = MAX_NB_WORDS
 		self.MAX_SEQUENCE_LENGTH = MAX_SEQUENCE_LENGTH
-		self.labels_index = dict((x,i) for i,x in enumerate(set(labels)))
+		self.labels_index = dict((x, i) for i, x in enumerate(set(labels)))
 		self.labels = [self.labels_index[x] for x in labels]
 		self.VALIDATION_SPLIT = VALIDATION_SPLIT
-
 
 	def preprocess(self):
 		"""
@@ -85,10 +84,6 @@ class TextProcessing:
 
 		return x_train, y_train, x_val, y_val, word_index
 
-
-
-
-
 	def build_embedding_index_from_word2vec(self, fname, vocab):
 		"""
 		Build an index of the word embeddings using google word2vec.
@@ -112,23 +107,20 @@ class TextProcessing:
 
 			print(vocab_size, layer1_size, binary_len)
 
-			for line in xrange(vocab_size):
-			    word = []
-			    while True:
-			        ch = f.read(1)
-			        if ch == ' ':
-			            word = ''.join(word)
-			            break
-			        if ch != '\n':
-			            word.append(ch)   
-			    if word in vocab:
-			        embeddings_index[word] = np.fromstring(f.read(binary_len), dtype='float32')
-			    else:
-			        f.read(binary_len)
+			for line in range(vocab_size):
+				word = []
+				while True:
+					ch = f.read(1)
+					if ch == ' ':
+						word = ''.join(word)
+						break
+					if ch != '\n':
+						word.append(ch)
+				if word in vocab:
+					embeddings_index[word] = np.fromstring(f.read(binary_len), dtype='float32')
+				else:
+					f.read(binary_len)
 		return embeddings_index
-
-
-
 
 	def build_embedding_index_from_glove(self, fname, vocab):
 		"""
@@ -145,14 +137,12 @@ class TextProcessing:
 		"""
 		print('Indexing word vectors.')
 		embeddings_index = {}
-		for line in open(fname):
+		for line in open(fname, 'rt', encoding='utf-8'):
 			record = line.split()
 			word = record[0]
-			coefs = np.asarray(values[1:], dtype='float32')
+			coefs = np.asarray(record[1:], dtype='float32')
 			embeddings_index[word] = coefs
 		return embeddings_index
-
-
 
 	def build_embedding_index_from_fasttex(self, fname, vocab):
 		"""
@@ -170,5 +160,3 @@ class TextProcessing:
 		print('Indexing word vectors.')
 		embeddings_index = {}
 		return embeddings_index
-
-
